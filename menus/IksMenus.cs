@@ -42,21 +42,16 @@ public class IksMenus
 
     private void OpenTeleportMenu(CCSPlayerController caller, IMenu backmenu)
     {
-        var menu = AdminApi.CreateMenu(TeleportMenu);
-        menu.Open(caller, AdminApi.Localizer["MENUTITLE_SelectPlayer"], backmenu);
-    }
-
-    private void TeleportMenu(CCSPlayerController caller, Admin? admin, IMenu menu)
-    {
-        OpenSelectPlayerMenu(caller, target => {
+        OpenSelectPlayerMenu(caller, (target, playerMenu) => {
             var posMenu = AdminApi.CreateMenu((caller, admin, newMenu) => {
                     PosMenu(caller, target, newMenu);
                 });
-            posMenu.Open(caller, AdminApi.Localizer["MENUTITLE_SelectPlayer"], menu);
-        });
+            posMenu.Open(caller, AdminApi.Localizer["MENUTITLE_SelectPlayer"], playerMenu);
+        }, onlyAlive: true, backmenu: backmenu);
     }
 
-    private void OpenSelectPlayerMenu(CCSPlayerController caller, Action<CCSPlayerController> OnSelect, bool onlyAlive = false, bool withBots = false)
+
+    private void OpenSelectPlayerMenu(CCSPlayerController caller, Action<CCSPlayerController, IMenu> OnSelect, bool onlyAlive = false, bool withBots = false, IMenu? backmenu = null)
     {
         var menu = AdminApi.CreateMenu((_, _, menu) => {
             var players = Utilities.GetPlayers().Where(x => x.IsValid && x.Connected == PlayerConnectedState.PlayerConnected).ToList();
@@ -84,11 +79,11 @@ public class IksMenus
                     }
                 }
                 menu.AddMenuOption(player.PlayerName, (_, _) => {
-                    OnSelect.Invoke(player);
+                    OnSelect.Invoke(player, menu);
                 });
             }
         });
-        menu.Open(caller, AdminApi.Localizer["MENUTITLE_SelectPlayer"]);
+        menu.Open(caller, AdminApi.Localizer["MENUTITLE_SelectPlayer"], backmenu);
     }
 
     private void PosMenu(CCSPlayerController caller, CCSPlayerController target, IMenu menu)

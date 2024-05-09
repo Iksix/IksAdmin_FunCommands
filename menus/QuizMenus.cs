@@ -26,7 +26,7 @@ public class QuizMenus
         if (key != "ManagePlayers") return;
         if (AdminApi.HasPermisions(caller.GetSteamId(), "set_hp", "b"))
             menu.AddMenuOption(Localizer["MENUOPTION_Hp"], (_, _) => {
-                OpenSelectPlayerMenu(caller, target => {
+                OpenSelectPlayerMenu(caller, (target, _) => {
                     MenuManager.CloseActiveMenu(caller);
                     AdminApi.SendMessageToPlayer(caller, Localizer["NOTIFY_PrintHp"]);
                     AdminApi.NextCommandAction.Add(caller, msg => {
@@ -34,13 +34,12 @@ public class QuizMenus
                         AdminApi.SendMessageToPlayer(caller, Localizer["NOTIFY_HpSetted"]);
                     }
                     );
-                }
-                );
+                }, onlyAlive: true, backmenu: menu);
             });
     }
 
 
-    private void OpenSelectPlayerMenu(CCSPlayerController caller, Action<CCSPlayerController> OnSelect, bool onlyAlive = false, bool withBots = false)
+    private void OpenSelectPlayerMenu(CCSPlayerController caller, Action<CCSPlayerController, IMenu> OnSelect, bool onlyAlive = false, bool withBots = false, IMenu? backmenu = null)
     {
         var menu = AdminApi.CreateMenu((_, _, menu) => {
             var players = Utilities.GetPlayers().Where(x => x.IsValid && x.Connected == PlayerConnectedState.PlayerConnected).ToList();
@@ -68,13 +67,12 @@ public class QuizMenus
                     }
                 }
                 menu.AddMenuOption(player.PlayerName, (_, _) => {
-                    OnSelect.Invoke(player);
+                    OnSelect.Invoke(player, menu);
                 });
             }
         });
-        menu.Open(caller, AdminApi.Localizer["MENUTITLE_SelectPlayer"]);
+        menu.Open(caller, AdminApi.Localizer["MENUTITLE_SelectPlayer"], backmenu);
     }
-
     
             
         
