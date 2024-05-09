@@ -1,0 +1,16 @@
+E:\_Plugins\IksAdmin_FunCommands\bin\Debug\net8.0\IksAdmin_FunCommands.deps.json
+E:\_Plugins\IksAdmin_FunCommands\bin\Debug\net8.0\IksAdmin_FunCommands.dll
+E:\_Plugins\IksAdmin_FunCommands\bin\Debug\net8.0\IksAdmin_FunCommands.pdb
+E:\_Plugins\IksAdmin_FunCommands\bin\Debug\net8.0\IksAdminApi.dll
+E:\_Plugins\IksAdmin_FunCommands\bin\Debug\net8.0\IksAdminApi.pdb
+E:\_Plugins\IksAdmin_FunCommands\obj\Debug\net8.0\IksAdmin_FunCommands.csproj.AssemblyReference.cache
+E:\_Plugins\IksAdmin_FunCommands\obj\Debug\net8.0\IksAdmin_FunCommands.GeneratedMSBuildEditorConfig.editorconfig
+E:\_Plugins\IksAdmin_FunCommands\obj\Debug\net8.0\IksAdmin_FunCommands.AssemblyInfoInputs.cache
+E:\_Plugins\IksAdmin_FunCommands\obj\Debug\net8.0\IksAdmin_FunCommands.AssemblyInfo.cs
+E:\_Plugins\IksAdmin_FunCommands\obj\Debug\net8.0\IksAdmin_FunCommands.csproj.CoreCompileInputs.cache
+E:\_Plugins\IksAdmin_FunCommands\obj\Debug\net8.0\IksAdmin_FunCommands.sourcelink.json
+E:\_Plugins\IksAdmin_FunCommands\obj\Debug\net8.0\IksAdmin.5E5E57B3.Up2Date
+E:\_Plugins\IksAdmin_FunCommands\obj\Debug\net8.0\IksAdmin_FunCommands.dll
+E:\_Plugins\IksAdmin_FunCommands\obj\Debug\net8.0\refint\IksAdmin_FunCommands.dll
+E:\_Plugins\IksAdmin_FunCommands\obj\Debug\net8.0\IksAdmin_FunCommands.pdb
+E:\_Plugins\IksAdmin_FunCommands\obj\Debug\net8.0\ref\IksAdmin_FunCommands.dll
