@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using CounterStrikeSharp.API;
 using CounterStrikeSharp.API.Core;
 using CounterStrikeSharp.API.Modules.Menu;
@@ -38,12 +34,55 @@ public class IksMenus
             menu.AddMenuOption(Localizer["MENUOPTION_Teleport"], (_, _) => {
                 OpenTeleportMenu(caller, menu);
             });
+        // Slap
+        if (AdminApi.HasPermisions(caller.GetSteamId(), "slap", "s"))
+            menu.AddMenuOption(Localizer["MENUTITLE_SelectDamage"], (_, _) => {
+                OpenSlapMenu(caller, menu);
+            });
+    }
+
+    private void OpenSlapMenu(CCSPlayerController caller, IMenu backmenu)
+    {
+        OpenSelectPlayerMenu(caller, (target, playerMenu) => {
+            var dmgMenu = AdminApi.CreateMenu((_, _, newMenu) =>
+            {
+                newMenu.AddMenuOption("0" + Localizer["OTHER_Hp"], (_, _) =>
+                {
+                    Commands.Slap(caller, target);
+                });
+                newMenu.AddMenuOption("5" + Localizer["OTHER_Hp"], (_, _) =>
+                {
+                    Commands.Slap(caller, target, 5);
+                });
+                newMenu.AddMenuOption("10" + Localizer["OTHER_Hp"], (_, _) =>
+                {
+                    Commands.Slap(caller, target, 10);
+                });
+                newMenu.AddMenuOption("20" + Localizer["OTHER_Hp"], (_, _) =>
+                {
+                    Commands.Slap(caller, target, 20);
+                });
+                newMenu.AddMenuOption("30" + Localizer["OTHER_Hp"], (_, _) =>
+                {
+                    Commands.Slap(caller, target, 30);
+                });
+                newMenu.AddMenuOption("40" + Localizer["OTHER_Hp"], (_, _) =>
+                {
+                    Commands.Slap(caller, target, 40);
+                });
+                newMenu.AddMenuOption("50" + Localizer["OTHER_Hp"], (_, _) =>
+                {
+                    Commands.Slap(caller, target, 50);
+                });
+            });
+            dmgMenu.Open(caller, Localizer["MENUTITLE_SelectDamage"], playerMenu);
+        }, onlyAlive: true, backmenu: backmenu);
     }
 
     private void OpenTeleportMenu(CCSPlayerController caller, IMenu backmenu)
     {
         OpenSelectPlayerMenu(caller, (target, playerMenu) => {
-            var posMenu = AdminApi.CreateMenu((caller, admin, newMenu) => {
+            var posMenu = AdminApi.CreateMenu((_, _, newMenu) => {
                     PosMenu(caller, target, newMenu);
                 });
             posMenu.Open(caller, AdminApi.Localizer["MENUTITLE_SelectPlayer"], playerMenu);
@@ -51,11 +90,11 @@ public class IksMenus
     }
 
 
-    private void OpenSelectPlayerMenu(CCSPlayerController caller, Action<CCSPlayerController, IMenu> OnSelect, bool onlyAlive = false, bool withBots = false, IMenu? backmenu = null)
+    private void OpenSelectPlayerMenu(CCSPlayerController caller, Action<CCSPlayerController, IMenu> onSelect, bool onlyAlive = false, bool withBots = false, IMenu? backmenu = null)
     {
         var menu = AdminApi.CreateMenu((_, _, menu) => {
             var players = Utilities.GetPlayers().Where(x => x.IsValid && x.Connected == PlayerConnectedState.PlayerConnected).ToList();
-            foreach (var player in players)
+            foreach (var player in players.ToList())
             {
                 if (onlyAlive && !player.PawnIsAlive)
                 {
@@ -75,11 +114,11 @@ public class IksMenus
                     if (!player.IsBot)
                     {
                         if (AdminApi.HasMoreImmunity(player.GetSteamId(), caller.GetSteamId()))
-                        continue;
+                            continue;
                     }
                 }
                 menu.AddMenuOption(player.PlayerName, (_, _) => {
-                    OnSelect.Invoke(player, menu);
+                    onSelect.Invoke(player, menu);
                 });
             }
         });

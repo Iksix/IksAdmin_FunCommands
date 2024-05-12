@@ -1,7 +1,7 @@
 {
     // NOTIFY_PlayerNotFound, NOTIFY_PlayerHaveBiggerImmunity, MENUTITLE_SelectPlayer
 
-    "ERROR_PlayerNotAlive" : "Игрок мёртв",
+    "ERROR_PlayerNotAlive" : "{darkred}Игрок должен быть жив!",
     "ERROR_PositionWithIndexNotFound" : "{darkred}Позиция с этим индексом не найдена!",
     
     "NOTIFY_PostionSaved" : "{green}Позиция сохранена!\n{green}Индекс: {white}{index}",
@@ -11,8 +11,12 @@
     "NOTIFY_WritePositionIndex" : "{green}Напишите индекс позиции в чат!\n{green}Пример:{white} !<позиция> {green}| {white}!1",
     "NOTIFY_PrintHp" : "{green}Укажите хп в чат\n{green}Пример:{white} !<hp>",
     "NOTIFY_HpSetted" : "{green}ХП успешно установлено",
+    "NOTIFY_Slap" : "{green}Вы шлёпнули игрока {white}{name}{white}!",
     
     "MENUOPTION_Teleport" : "Телепортировать",
     "MENUOPTION_SavePos" : "Сохранить позицию",
-    "MENUOPTION_Hp" : "Изменить ХП"
+    "MENUOPTION_Slap" : "Шлёпнуть",
+    "MENUTITLE_SelectDamage" : "Выберите урон",
+    "MENUOPTION_Hp" : "Изменить ХП",
+    "OTHER_Hp" : "хп"
 }

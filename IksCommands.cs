@@ -11,9 +11,9 @@ public class IksCommands
     public IIksAdminApi AdminApi = IksAdmin_FunCommands.AdminApi!;
     public IStringLocalizer Localizer = IksAdmin_FunCommands.GlobalLocalizer!;
     public List<PositionModel> SavedPositions = new();
-    public IksCommands(bool hotReload)
+    public IksCommands()
     {
-        AdminApi!.AddNewCommand(
+        AdminApi.AddNewCommand(
             "savepos",
             "Save player position",
             "css_savepos <position index>",
@@ -23,7 +23,7 @@ public class IksCommands
             CommandUsage.CLIENT_ONLY,
             OnSavePosCommand
         );
-        AdminApi!.AddNewCommand(
+        AdminApi.AddNewCommand(
             "teleport",
             "teleport to saved location",
             "css_teleport <index>\ncss_teleport <#sid/#uid/name> <index>",
@@ -33,6 +33,63 @@ public class IksCommands
             CommandUsage.CLIENT_ONLY,
             OnTeleportCommand
         );
+        AdminApi.AddNewCommand(
+            "teleport",
+            "teleport to saved location",
+            "css_teleport <index>\ncss_teleport <#sid/#uid/name> <index>",
+            1,
+            "teleport",
+            "d",
+            CommandUsage.CLIENT_ONLY,
+            OnTeleportCommand
+        );
+        AdminApi.AddNewCommand(
+            "slap",
+            "slap the player",
+            "css_slap <#uid/#sid/name> <damage>",
+            1,
+            "slap",
+            "s",
+            CommandUsage.CLIENT_ONLY,
+            OnSlapCommand
+        );
+    }
+
+    private void OnSlapCommand(CCSPlayerController caller, Admin? admin, List<string> args, CommandInfo _)
+    {
+        var target = Extensions.GetPlayerFromArg(args[0]);
+        if (args.Count == 1)
+        {
+            Slap(caller, target);
+        }
+        else if (args.Count == 2)
+        {
+            Slap(caller, target, int.Parse(args[1]));
+        }
+    }
+
+    public void Slap(CCSPlayerController caller, CCSPlayerController? target, int damage = 0)
+    {
+        if (target == null)
+        {
+            AdminApi.SendMessageToPlayer(caller, AdminApi.Localizer["NOTIFY_PlayerNotFound"]);
+            return;
+        }
+        if (!target.PawnIsAlive)
+        {
+            AdminApi.SendMessageToPlayer(caller, AdminApi.Localizer["ERROR_PlayerNotAlive"]);
+            return;
+        }
+        if (target != caller)
+        {
+            if (AdminApi.HasMoreImmunity(target.GetSteamId(), caller.GetSteamId()))
+            {
+                AdminApi.SendMessageToPlayer(caller, AdminApi.Localizer["NOTIFY_PlayerHaveBiggerImmunity"]);
+                return;
+            }
+        }
+        AdminApi.SendMessageToPlayer(caller, Localizer["NOTIFY_Slap"].Value.Replace("{name}", target.PlayerName));
+        target.Slap(damage);
     }
 
     private void OnTeleportCommand(CCSPlayerController caller, Admin? admin, List<string> args, CommandInfo _)
@@ -48,7 +105,6 @@ public class IksCommands
         }
         Teleport(caller, target, index);
     }
-
     public void Teleport(CCSPlayerController caller, CCSPlayerController? target, string index)
     {
         if (target == null)
@@ -80,7 +136,13 @@ public class IksCommands
         .Replace("{index}", index)
         );
     }
+    private void OnSavePosCommand(CCSPlayerController caller, Admin? admin, List<string> args, CommandInfo _)
+    {
+        var index = args[0];
+        SavePos(caller, index);
+    }
 
+    #region Functions
     public void SavePos(CCSPlayerController caller, string index)
     {
         var existingPosition = GetPosition(caller, index);
@@ -97,12 +159,6 @@ public class IksCommands
         SavedPositions.Add(newPosition);
         AdminApi.SendMessageToPlayer(caller, Localizer["NOTIFY_PostionReSaved"].Value.Replace("{index}", index));
     }
-    private void OnSavePosCommand(CCSPlayerController caller, Admin? admin, List<string> args, CommandInfo _)
-    {
-        var index = args[0];
-        SavePos(caller, index);
-    }
-
     public PositionModel? GetPosition(CCSPlayerController caller, string index)
     {
         var existingPosition = SavedPositions.FirstOrDefault(x => x.Index == index && x.SteamId == caller.AuthorizedSteamID!.SteamId64);
@@ -113,4 +169,7 @@ public class IksCommands
         var existingPositions = SavedPositions.Where(x => x.SteamId == caller.AuthorizedSteamID!.SteamId64).ToList();
         return existingPositions;
     }
+
+    #endregion
+    
 }
