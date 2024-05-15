@@ -2,11 +2,13 @@ using CounterStrikeSharp.API;
 using CounterStrikeSharp.API.Core;
 using CounterStrikeSharp.API.Modules.Memory;
 using CounterStrikeSharp.API.Modules.Utils;
+using Microsoft.Extensions.Localization;
 
 namespace IksAdmin_FunCommands;
 
 public static class Extensions
-{   
+{
+	public static IStringLocalizer Localizer;
     public static void ToggleNoclip(this CCSPlayerController player)
     {
         var pawn = player.PlayerPawn.Value;
@@ -124,7 +126,7 @@ public static class Extensions
 			pawn.CommitSuicide(true, true);
 	}
 	
-	public static void Hp(this CCSPlayerController target, int health = 100)
+	public static void Hp(CCSPlayerController caller, CCSPlayerController target, int health = 100)
 	{
 		if (health <= 0 || !target.PawnIsAlive || target.PlayerPawn.Value == null) return;
 
@@ -134,15 +136,17 @@ public static class Extensions
 		{
 			target.PlayerPawn.Value.MaxHealth = health;
 		}
-
+		
 		Utilities.SetStateChanged(target.PlayerPawn.Value, "CBaseEntity", "m_iHealth");
+		IksAdmin_FunCommands.AdminApi!.SendMessageToPlayer(caller, Localizer["NOTIFY_HpSetted"]);
 	}
 
-	public static void SetSpeed(this CCSPlayerController target, float speed)
+	public static void SetSpeed(CCSPlayerController caller, CCSPlayerController target, float speed)
 	{
 		CCSPlayerPawn? playerPawnValue = target.PlayerPawn.Value;
 		if (playerPawnValue == null) return;
 		playerPawnValue.VelocityModifier = speed;
+		IksAdmin_FunCommands.AdminApi!.SendMessageToPlayer(caller, Localizer["NOTIFY_SpeedSetted"]);
 	}
 	public static void SetGravity(this CCSPlayerController controller, float gravity)
 	{
@@ -162,4 +166,36 @@ public static class Extensions
 		Utilities.SetStateChanged(controller, "CCSPlayerController", "m_pInGameMoneyServices");
 	}
 
+	public static void DoForCt(Action<CCSPlayerController> action)
+	{
+		var players = GetOnlinePlayers().Where(x => x.TeamNum == 3).ToList();
+		foreach (var player in players)
+		{
+			action.Invoke(player);
+		}
+	}
+	public static void DoForT(Action<CCSPlayerController> action)
+	{
+		var players = GetOnlinePlayers().Where(x => x.TeamNum == 2).ToList();
+		foreach (var player in players)
+		{
+			action.Invoke(player);
+		}
+	}
+	public static void DoForAll(Action<CCSPlayerController> action)
+	{
+		var players = GetOnlinePlayers();
+		foreach (var player in players)
+		{
+			action.Invoke(player);
+		}
+	}
+	public static void DoForSpec(Action<CCSPlayerController> action)
+	{
+		var players = GetOnlinePlayers().Where(x => x.TeamNum == 1).ToList();
+		foreach (var player in players)
+		{
+			action.Invoke(player);
+		}
+	}
 }

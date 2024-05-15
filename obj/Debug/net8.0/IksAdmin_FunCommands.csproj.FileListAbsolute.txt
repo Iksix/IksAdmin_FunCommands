@@ -14,3 +14,4 @@ E:\_Plugins\IksAdmin_FunCommands\obj\Debug\net8.0\IksAdmin_FunCommands.dll
 E:\_Plugins\IksAdmin_FunCommands\obj\Debug\net8.0\refint\IksAdmin_FunCommands.dll
 E:\_Plugins\IksAdmin_FunCommands\obj\Debug\net8.0\IksAdmin_FunCommands.pdb
 E:\_Plugins\IksAdmin_FunCommands\obj\Debug\net8.0\ref\IksAdmin_FunCommands.dll
+E:\_Plugins\IksAdmin_FunCommands\bin\Debug\net8.0\MenuManagerApi.dll

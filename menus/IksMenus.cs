@@ -36,7 +36,7 @@ public class IksMenus
             });
         // Slap
         if (AdminApi.HasPermisions(caller.GetSteamId(), "slap", "s"))
-            menu.AddMenuOption(Localizer["MENUTITLE_SelectDamage"], (_, _) => {
+            menu.AddMenuOption(Localizer["MENUOPTION_Slap"], (_, _) => {
                 OpenSlapMenu(caller, menu);
             });
     }

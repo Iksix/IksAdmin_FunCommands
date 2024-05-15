@@ -29,10 +29,20 @@ public class QuizMenus
                 OpenSelectPlayerMenu(caller, (target, _) => {
                     MenuManager.CloseActiveMenu(caller);
                     AdminApi.SendMessageToPlayer(caller, Localizer["NOTIFY_PrintHp"]);
+                        AdminApi.NextCommandAction.Add(caller, msg => {
+                            Extensions.Hp(caller, target, int.Parse(msg));
+                        }
+                    );
+                }, onlyAlive: true, backmenu: menu);
+            });
+        if (AdminApi.HasPermisions(caller.GetSteamId(), "set_speed", "b"))
+            menu.AddMenuOption(Localizer["MENUOPTION_Speed"], (_, _) => {
+                OpenSelectPlayerMenu(caller, (target, _) => {
+                    MenuManager.CloseActiveMenu(caller);
+                    AdminApi.SendMessageToPlayer(caller, Localizer["NOTIFY_PrintSpeed"]);
                     AdminApi.NextCommandAction.Add(caller, msg => {
-                        target.Hp(int.Parse(msg));
-                        AdminApi.SendMessageToPlayer(caller, Localizer["NOTIFY_HpSetted"]);
-                    }
+                            Extensions.Hp(caller, target, int.Parse(msg));
+                        }
                     );
                 }, onlyAlive: true, backmenu: menu);
             });

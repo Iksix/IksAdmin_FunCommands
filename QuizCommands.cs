@@ -82,6 +82,22 @@ public class QuizCommands
 
     private void OnSpeedCommand(CCSPlayerController caller, Admin? admin, List<string> args, CommandInfo info)
     {
+        var identity = args[0];
+        switch (identity)
+        {
+            case "@ct":
+                Extensions.DoForCt(player => { Extensions.SetSpeed(caller, player, int.Parse(args[1])); });
+                return;
+            case "@t":
+                Extensions.DoForT(player => { Extensions.SetSpeed(caller, player, int.Parse(args[1])); });
+                return;
+            case "@all":
+                Extensions.DoForAll(player => { Extensions.SetSpeed(caller, player, int.Parse(args[1])); });
+                return;
+            case "@spec":
+                Extensions.DoForSpec(player => { Extensions.SetSpeed(caller, player, int.Parse(args[1])); });
+                return;
+        }
         var target = Extensions.GetPlayerFromArg(args[0]);
         if (target == null)
         {
@@ -93,11 +109,27 @@ public class QuizCommands
             _api.SendMessageToPlayer(caller, Localizer["ERROR_PlayerNotAlive"]);
             return;
         }
-        target.SetSpeed(int.Parse(args[1]));
+        Extensions.SetSpeed(caller, target, int.Parse(args[1]));
     }
 
     private void OnHPCommand(CCSPlayerController caller, Admin? admin, List<string> args, CommandInfo info)
     {
+        var identity = args[0];
+        switch (identity)
+        {
+            case "@ct":
+                Extensions.DoForCt(player => { Extensions.Hp(caller, player, int.Parse(args[1])); });
+                return;
+            case "@t":
+                Extensions.DoForT(player => { Extensions.Hp(caller, player, int.Parse(args[1])); });
+                return;
+            case "@all":
+                Extensions.DoForAll(player => { Extensions.Hp(caller, player, int.Parse(args[1])); });
+                return;
+            case "@spec":
+                Extensions.DoForSpec(player => { Extensions.Hp(caller, player, int.Parse(args[1])); });
+                return;
+        }
         var target = Extensions.GetPlayerFromArg(args[0]);
         if (target == null)
         {
@@ -109,6 +141,6 @@ public class QuizCommands
             _api.SendMessageToPlayer(caller, Localizer["ERROR_PlayerNotAlive"]);
             return;
         }
-        target.Hp(int.Parse(args[1]));
+        Extensions.Hp(caller, target, int.Parse(args[1]));
     }
 }

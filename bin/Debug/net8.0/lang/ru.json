@@ -10,7 +10,9 @@
     "NOTIFY_TargetTeleported" : "{green}Вы успешно телепортировали игрока {white}{name}{green} в позицию {white}{index}{green}!",
     "NOTIFY_WritePositionIndex" : "{green}Напишите индекс позиции в чат!\n{green}Пример:{white} !<позиция> {green}| {white}!1",
     "NOTIFY_PrintHp" : "{green}Укажите хп в чат\n{green}Пример:{white} !<hp>",
+    "NOTIFY_PrintSpeed" : "{green}Укажите скорость в чат\n{green}Пример:{white} !<speed>",
     "NOTIFY_HpSetted" : "{green}ХП успешно установлено",
+    "NOTIFY_SpeedSetted" : "{green}Скорость успешно установлена",
     "NOTIFY_Slap" : "{green}Вы шлёпнули игрока {white}{name}{white}!",
     
     "MENUOPTION_Teleport" : "Телепортировать",
@@ -18,5 +20,6 @@
     "MENUOPTION_Slap" : "Шлёпнуть",
     "MENUTITLE_SelectDamage" : "Выберите урон",
     "MENUOPTION_Hp" : "Изменить ХП",
+    "MENUOPTION_Speed" : "Изменить Скорость",
     "OTHER_Hp" : "хп"
 }

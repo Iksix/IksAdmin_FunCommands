@@ -46,7 +46,7 @@ public class IksCommands
         AdminApi.AddNewCommand(
             "slap",
             "slap the player",
-            "css_slap <#uid/#sid/name> <damage>",
+            "css_slap <#uid/#sid/name> <damage> <force>",
             1,
             "slap",
             "s",
@@ -58,17 +58,42 @@ public class IksCommands
     private void OnSlapCommand(CCSPlayerController caller, Admin? admin, List<string> args, CommandInfo _)
     {
         var target = Extensions.GetPlayerFromArg(args[0]);
+        var damage = 0;
+        var force = 1;
         if (args.Count == 1)
         {
             Slap(caller, target);
         }
         else if (args.Count == 2)
         {
-            Slap(caller, target, int.Parse(args[1]));
+            damage = int.Parse(args[1]);
         }
+        else if (args.Count == 3)
+        {
+            damage = int.Parse(args[1]);
+            force = int.Parse(args[2]);
+        }
+
+        var identity = args[0];
+        switch (identity)
+        {
+            case "@ct":
+                Extensions.DoForCt(player => { Slap(caller, player, damage, force); });
+                return;
+            case "@t":
+                Extensions.DoForT(player => { Slap(caller, player, damage, force); });
+                return;
+            case "@all":
+                Extensions.DoForAll(player => { Slap(caller, player, damage, force); });
+                return;
+            case "@spec":
+                Extensions.DoForSpec(player => { Slap(caller, player, damage, force); });
+                return;
+        }
+        Slap(caller, target, damage, force);
     }
 
-    public void Slap(CCSPlayerController caller, CCSPlayerController? target, int damage = 0)
+    public void Slap(CCSPlayerController caller, CCSPlayerController? target, int damage = 0, int force = 1)
     {
         if (target == null)
         {
@@ -77,7 +102,7 @@ public class IksCommands
         }
         if (!target.PawnIsAlive)
         {
-            AdminApi.SendMessageToPlayer(caller, AdminApi.Localizer["ERROR_PlayerNotAlive"]);
+            AdminApi.SendMessageToPlayer(caller, Localizer["ERROR_PlayerNotAlive"]);
             return;
         }
         if (target != caller)
@@ -89,19 +114,38 @@ public class IksCommands
             }
         }
         AdminApi.SendMessageToPlayer(caller, Localizer["NOTIFY_Slap"].Value.Replace("{name}", target.PlayerName));
-        target.Slap(damage);
+        for (int i = 0; i < Math.Abs(force); i++)
+        {
+            target.Slap(damage);
+        }
     }
 
     private void OnTeleportCommand(CCSPlayerController caller, Admin? admin, List<string> args, CommandInfo _)
     {
-        string index;
+        string index = args[0];
         var target = caller;
         if (args.Count == 1) {
             index = args[0]; 
         }
-        else {
+        else if (args.Count == 2) {
             index = args[1];
-            target = Extensions.GetPlayerFromArg(args[0]);
+            var identity = args[0];
+            switch (identity)
+            {
+                case "@ct":
+                    Extensions.DoForCt(player => { Teleport(caller, player, index); });
+                    return;
+                case "@t":
+                    Extensions.DoForT(player => { Teleport(caller, player, index); });
+                    return;
+                case "@all":
+                    Extensions.DoForAll(player => { Teleport(caller, player, index); });
+                    return;
+                case "@spec":
+                    Extensions.DoForSpec(player => { Teleport(caller, player, index); });
+                    return;
+            }
+            target = Extensions.GetPlayerFromArg(identity);
         }
         Teleport(caller, target, index);
     }
@@ -146,8 +190,8 @@ public class IksCommands
     public void SavePos(CCSPlayerController caller, string index)
     {
         var existingPosition = GetPosition(caller, index);
-        var playerPos = caller.PlayerPawn.Value!.AbsOrigin!;
-        var vector = new Vector(playerPos.X, playerPos.Y, playerPos.Z);
+        var playerPos = caller.Pawn.Value!.AbsOrigin;
+        var vector = new Vector(playerPos!.X, playerPos.Y, playerPos.Z);
         var newPosition = new PositionModel(index, vector, caller.AuthorizedSteamID!.SteamId64);
         if (existingPosition == null)
         {
