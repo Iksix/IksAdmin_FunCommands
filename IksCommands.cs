@@ -34,16 +34,6 @@ public class IksCommands
             OnTeleportCommand
         );
         AdminApi.AddNewCommand(
-            "teleport",
-            "teleport to saved location",
-            "css_teleport <index>\ncss_teleport <#sid/#uid/name> <index>",
-            1,
-            "teleport",
-            "d",
-            CommandUsage.CLIENT_ONLY,
-            OnTeleportCommand
-        );
-        AdminApi.AddNewCommand(
             "slap",
             "slap the player",
             "css_slap <#uid/#sid/name> <damage> <force>",
@@ -53,45 +43,46 @@ public class IksCommands
             CommandUsage.CLIENT_ONLY,
             OnSlapCommand
         );
+
     }
 
-    private void OnSlapCommand(CCSPlayerController caller, Admin? admin, List<string> args, CommandInfo _)
+private void OnSlapCommand(CCSPlayerController caller, Admin? admin, List<string> args, CommandInfo _)
+{
+    var target = Extensions.GetPlayerFromArg(args[0]);
+    var damage = 0;
+    var force = 1;
+    if (args.Count == 1)
     {
-        var target = Extensions.GetPlayerFromArg(args[0]);
-        var damage = 0;
-        var force = 1;
-        if (args.Count == 1)
-        {
-            Slap(caller, target);
-        }
-        else if (args.Count == 2)
-        {
-            damage = int.Parse(args[1]);
-        }
-        else if (args.Count == 3)
-        {
-            damage = int.Parse(args[1]);
-            force = int.Parse(args[2]);
-        }
-
-        var identity = args[0];
-        switch (identity)
-        {
-            case "@ct":
-                Extensions.DoForCt(player => { Slap(caller, player, damage, force); });
-                return;
-            case "@t":
-                Extensions.DoForT(player => { Slap(caller, player, damage, force); });
-                return;
-            case "@all":
-                Extensions.DoForAll(player => { Slap(caller, player, damage, force); });
-                return;
-            case "@spec":
-                Extensions.DoForSpec(player => { Slap(caller, player, damage, force); });
-                return;
-        }
-        Slap(caller, target, damage, force);
+        Slap(caller, target);
     }
+    else if (args.Count == 2)
+    {
+        damage = int.Parse(args[1]);
+    }
+    else if (args.Count == 3)
+    {
+        damage = int.Parse(args[1]);
+        force = int.Parse(args[2]);
+    }
+
+    var identity = args[0];
+    switch (identity)
+    {
+        case "@ct":
+            Extensions.DoForCt(player => { Slap(caller, player, damage, force); });
+            return;
+        case "@t":
+            Extensions.DoForT(player => { Slap(caller, player, damage, force); });
+            return;
+        case "@all":
+            Extensions.DoForAll(player => { Slap(caller, player, damage, force); });
+            return;
+        case "@spec":
+            Extensions.DoForSpec(player => { Slap(caller, player, damage, force); });
+            return;
+    }
+    Slap(caller, target, damage, force);
+}
 
     public void Slap(CCSPlayerController caller, CCSPlayerController? target, int damage = 0, int force = 1)
     {
@@ -114,10 +105,7 @@ public class IksCommands
             }
         }
         AdminApi.SendMessageToPlayer(caller, Localizer["NOTIFY_Slap"].Value.Replace("{name}", target.PlayerName));
-        for (int i = 0; i < Math.Abs(force); i++)
-        {
-            target.Slap(damage);
-        }
+        target.Slap(damage, force);
     }
 
     private void OnTeleportCommand(CCSPlayerController caller, Admin? admin, List<string> args, CommandInfo _)

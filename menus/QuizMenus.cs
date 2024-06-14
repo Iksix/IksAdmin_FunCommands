@@ -41,7 +41,18 @@ public class QuizMenus
                     MenuManager.CloseActiveMenu(caller);
                     AdminApi.SendMessageToPlayer(caller, Localizer["NOTIFY_PrintSpeed"]);
                     AdminApi.NextCommandAction.Add(caller, msg => {
-                            Extensions.Hp(caller, target, int.Parse(msg));
+                            Extensions.SetSpeed(caller, target, int.Parse(msg));
+                        }
+                    );
+                }, onlyAlive: true, backmenu: menu);
+            });
+        if (AdminApi.HasPermisions(caller.GetSteamId(), "set_gravity", "b"))
+            menu.AddMenuOption(Localizer["MENUOPTION_Speed"], (_, _) => {
+                OpenSelectPlayerMenu(caller, (target, _) => {
+                    MenuManager.CloseActiveMenu(caller);
+                    AdminApi.SendMessageToPlayer(caller, Localizer["NOTIFY_PrintSpeed"]);
+                    AdminApi.NextCommandAction.Add(caller, msg => {
+                            Extensions.SetSpeed(caller, target, int.Parse(msg));
                         }
                     );
                 }, onlyAlive: true, backmenu: menu);

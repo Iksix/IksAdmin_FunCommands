@@ -18,6 +18,7 @@ public class IksAdmin_FunCommands : BasePlugin
     {
         AdminApi = _pluginCapability.Get();
         GlobalLocalizer = Localizer;
+        Extensions.Localizer = Localizer;
         var iksCommands = new IksCommands();
         var iksMenus = new IksMenus(iksCommands);
         var quizCommands = new QuizCommands(hotReload);

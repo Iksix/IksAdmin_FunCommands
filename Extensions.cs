@@ -97,7 +97,7 @@ public static class Extensions
         return null;
     }
 
-    public static void Slap(this CCSPlayerController player, int damage = 0)
+    public static void Slap(this CCSPlayerController player, int damage = 0, int force = 1)
 	{
         var pawn = player.PlayerPawn.Value;
 		if (pawn!.LifeState != (int)LifeState_t.LIFE_ALIVE)
@@ -112,9 +112,9 @@ public static class Extensions
 		vel.Y += ((random.Next(180) + 50) * ((random.Next(2) == 1) ? -1 : 1));
 		vel.Z += random.Next(200) + 100;
 
-		pawn.AbsVelocity.X = vel.X;
-		pawn.AbsVelocity.Y = vel.Y;
-		pawn.AbsVelocity.Z = vel.Z;
+		pawn.AbsVelocity.X = vel.X * force;
+		pawn.AbsVelocity.Y = vel.Y * force;
+		pawn.AbsVelocity.Z = vel.Z * force;
 
 		if (damage <= 0)
 			return;
@@ -148,12 +148,13 @@ public static class Extensions
 		playerPawnValue.VelocityModifier = speed;
 		IksAdmin_FunCommands.AdminApi!.SendMessageToPlayer(caller, Localizer["NOTIFY_SpeedSetted"]);
 	}
-	public static void SetGravity(this CCSPlayerController controller, float gravity)
+	public static void SetGravity(this CCSPlayerController controller, CCSPlayerController caller, float gravity)
 	{
 		CCSPlayerPawn? playerPawnValue = controller.PlayerPawn.Value;
 		if (playerPawnValue == null) return;
 
 		playerPawnValue.GravityScale = gravity;
+		IksAdmin_FunCommands.AdminApi!.SendMessageToPlayer(caller, Localizer["NOTIFY_GravitySetted"]);
 	}
 
 	public static void SetMoney(this CCSPlayerController controller, int money)

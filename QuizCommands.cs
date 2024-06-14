@@ -44,7 +44,7 @@ public class QuizCommands
         _api!.AddNewCommand(
             "gravity",
             "set player gravity",
-            "css_hp <#sid/#uid/name> <gravity>",
+            "css_gravity <#sid/#uid/name> <gravity>",
             2,
             "set_gravity",
             "b",
@@ -55,6 +55,22 @@ public class QuizCommands
 
     private void OnGravityCommand(CCSPlayerController caller, Admin? admin, List<string> args, CommandInfo info)
     {
+        var identity = args[0];
+        switch (identity)
+        {
+            case "@ct":
+                Extensions.DoForCt(player => { player.SetGravity(caller, float.Parse(args[1])); });
+                return;
+            case "@t":
+                Extensions.DoForT(player => { player.SetGravity(caller, float.Parse(args[1])); });
+                return;
+            case "@all":
+                Extensions.DoForAll(player => { player.SetGravity(caller, float.Parse(args[1])); });
+                return;
+            case "@spec":
+                Extensions.DoForSpec(player => { player.SetGravity(caller, float.Parse(args[1])); });
+                return;
+        }
         var target = Extensions.GetPlayerFromArg(args[0]);
         if (target == null)
         {
@@ -66,7 +82,7 @@ public class QuizCommands
             _api.SendMessageToPlayer(caller, Localizer["ERROR_PlayerNotAlive"]);
             return;
         }
-        target.SetGravity(int.Parse(args[1]));
+        target.SetGravity(caller, float.Parse(args[1]));
     }
 
     private void OnSetMoneyCommand(CCSPlayerController caller, Admin? admin, List<string> args, CommandInfo info)
