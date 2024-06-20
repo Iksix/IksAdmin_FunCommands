@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("IksAdmin_FunCommands")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+4e0a2bf2204768e336e92661914365b90c120924")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+da0044a009ebfef2c382f24c48a4960187f0243b")]
 [assembly: System.Reflection.AssemblyProductAttribute("IksAdmin_FunCommands")]
 [assembly: System.Reflection.AssemblyTitleAttribute("IksAdmin_FunCommands")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

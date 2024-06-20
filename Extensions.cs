@@ -1,3 +1,4 @@
+using System.Drawing;
 using CounterStrikeSharp.API;
 using CounterStrikeSharp.API.Core;
 using CounterStrikeSharp.API.Modules.Memory;
@@ -9,6 +10,67 @@ namespace IksAdmin_FunCommands;
 public static class Extensions
 {
 	public static IStringLocalizer Localizer;
+
+	public static void SetPlayerInvisible(this CCSPlayerController player)
+	{
+		var playerPawnValue = player.PlayerPawn.Value;
+		if (playerPawnValue == null || !playerPawnValue.IsValid)
+		{
+			Console.WriteLine("Player pawn is not valid.");
+			return;
+		}
+
+		if (playerPawnValue != null && playerPawnValue.IsValid)
+		{
+			playerPawnValue.Render = Color.FromArgb(0, 0, 0, 0);
+			Utilities.SetStateChanged(playerPawnValue, "CBaseModelEntity", "m_clrRender");
+		}
+
+		var activeWeapon = playerPawnValue!.WeaponServices?.ActiveWeapon.Value;
+		if (activeWeapon != null && activeWeapon.IsValid)
+		{
+			activeWeapon.Render = Color.FromArgb(0, 0, 0, 0);
+			activeWeapon.ShadowStrength = 0.0f;
+			Utilities.SetStateChanged(activeWeapon, "CBaseModelEntity", "m_clrRender");
+		}
+
+		var myWeapons = playerPawnValue.WeaponServices?.MyWeapons;
+		if (myWeapons != null)
+		{
+			foreach (var gun in myWeapons)
+			{
+				var weapon = gun.Value;
+				if (weapon != null)
+				{
+					weapon.Render = Color.FromArgb(0, 0, 0, 0);
+					weapon.ShadowStrength = 0.0f;
+					Utilities.SetStateChanged(weapon, "CBaseModelEntity", "m_clrRender");
+				}
+			}
+		}
+	}
+	public static void SetScale(this CCSPlayerController player, float value)
+	{
+		var playerPawnValue = player.PlayerPawn.Value;
+		if (playerPawnValue == null)
+			return;
+
+		playerPawnValue.CBodyComponent!.SceneNode!.Scale = value;
+		Utilities.SetStateChanged(playerPawnValue, "CBaseEntity", "m_CBodyComponent");
+	}
+
+	public static void SetPlayerVisible(this CCSPlayerController player)
+	{
+		if (player == null || !player.IsValid || !player.PawnIsAlive)
+			return;
+
+		var playerPawnValue = player.PlayerPawn.Value;
+		if (playerPawnValue == null)
+			return;
+
+		playerPawnValue.Render = Color.FromArgb(255, 255, 255, 255);
+		Utilities.SetStateChanged(playerPawnValue, "CBaseModelEntity", "m_clrRender");
+	}
     public static void ToggleNoclip(this CCSPlayerController player)
     {
         var pawn = player.PlayerPawn.Value;

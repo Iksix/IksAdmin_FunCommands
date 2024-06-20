@@ -8,7 +8,7 @@
 
   <ItemGroup>
     <PackageReference Include="CounterStrikeSharp.Api" Version="1.0.232" />
-    <Reference Include="E:\__iksAdmin\Iks_Admin\IksAdmin\bin\Debug\net8.0\IksAdminApi.dll" />
+    <Reference Include="D:\_Plugins\IksAdmin_FunCommands\IksAdminApi.dll" />
   </ItemGroup>
 
 </Project>

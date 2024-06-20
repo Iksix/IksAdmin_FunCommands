@@ -14,15 +14,39 @@ public class IksAdmin_FunCommands : BasePlugin
     private readonly PluginCapability<IIksAdminApi> _pluginCapability = new("iksadmin:core");
     public static IIksAdminApi? AdminApi;
     public static IStringLocalizer? GlobalLocalizer;
+    public static string HTMLMessageForAll = "";
+    public static int HTMLMessageTime = 5;
+
+    public override void Load(bool hotReload)
+    {
+        RegisterListener<Listeners.OnTick>(() => {
+            if (HTMLMessageTime > 0)
+            {
+                var players = Extensions.GetOnlinePlayers();
+                foreach (var player in players)
+                {
+                    player.PrintToCenterHtml(HTMLMessageForAll);
+                }
+            }
+        });
+        AddTimer(1, () => {
+            if (HTMLMessageTime > 0)
+                HTMLMessageTime--;
+        }, CounterStrikeSharp.API.Modules.Timers.TimerFlags.REPEAT);
+    }
+
+    public static void PrintHtmlToAll(string message, int time = 5)
+    {
+        HTMLMessageForAll = message;
+        HTMLMessageTime = time;
+    }
     public override void OnAllPluginsLoaded(bool hotReload)
     {
         AdminApi = _pluginCapability.Get();
         GlobalLocalizer = Localizer;
         Extensions.Localizer = Localizer;
-        var iksCommands = new IksCommands();
-        var iksMenus = new IksMenus(iksCommands);
-        var quizCommands = new QuizCommands(hotReload);
-        var quizMenus = new QuizMenus(quizCommands);
+        var Commands = new Commands();
+        var Menus = new Menus(Commands);
     }
 
     

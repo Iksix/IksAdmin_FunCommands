@@ -3,6 +3,9 @@
 
     "ERROR_PlayerNotAlive" : "{darkred}Игрок должен быть жив!",
     "ERROR_PositionWithIndexNotFound" : "{darkred}Позиция с этим индексом не найдена!",
+    "ERROR_FormatException" : "{darkred}Допустимые форматы для этой команды: .png, .jpg, .jpeg, .gif!",
+    "ERROR_VerySmallArgument" : "{darkred}Слишком маленькое значение аргумента!",
+    "ERROR_VeryLargeArgument" : "{darkred}Слишком большое значение аргумента!",
     
     "NOTIFY_PostionSaved" : "{green}Позиция сохранена!\n{green}Индекс: {white}{index}",
     "NOTIFY_PostionReSaved" : "{green}Позиция перезаписана!\n{green}Индекс: {white}{index}",
@@ -10,13 +13,20 @@
     "NOTIFY_TargetTeleported" : "{green}Вы успешно телепортировали игрока {white}{name}{green} в позицию {white}{index}{green}!",
     "NOTIFY_WritePositionIndex" : "{green}Напишите индекс позиции в чат!\n{green}Пример:{white} !<позиция> {green}| {white}!1",
     "NOTIFY_PrintHp" : "{green}Укажите хп в чат\n{green}Пример:{white} !<hp>",
+    "NOTIFY_PrintSpeed" : "{green}Укажите скорость в чат\n{green}Пример:{white} !<speed>",
     "NOTIFY_HpSetted" : "{green}ХП успешно установлено",
+    "NOTIFY_SpeedSetted" : "{green}Скорость успешно установлена",
+    "NOTIFY_GravitySetted" : "{green}Гравитация успешно установлена",
     "NOTIFY_Slap" : "{green}Вы шлёпнули игрока {white}{name}{white}!",
+    "NOTIFY_InvisibilityOn" : "{green}Игрок {white}{name}{white} теперь не видимый!",
+    "NOTIFY_InvisibilityOff" : "{green}Игрок {white}{name}{white} теперь видимый!",
+    "NOTIFY_Scale" : "{green}Вы успешно изменили размер модели у игрока {white}{name}{white}!",
     
     "MENUOPTION_Teleport" : "Телепортировать",
     "MENUOPTION_SavePos" : "Сохранить позицию",
     "MENUOPTION_Slap" : "Шлёпнуть",
     "MENUTITLE_SelectDamage" : "Выберите урон",
     "MENUOPTION_Hp" : "Изменить ХП",
+    "MENUOPTION_Speed" : "Изменить Скорость",
     "OTHER_Hp" : "хп"
 }

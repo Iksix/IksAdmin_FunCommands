@@ -5,12 +5,13 @@ using IksAdminApi;
 using Microsoft.Extensions.Localization;
 
 namespace IksAdmin_FunCommands;
-public class IksMenus
+public class Menus
 {
     public IIksAdminApi AdminApi = IksAdmin_FunCommands.AdminApi!;
     public IStringLocalizer Localizer = IksAdmin_FunCommands.GlobalLocalizer!;
-    public IksCommands Commands;
-    public IksMenus(IksCommands commands)
+    public Commands Commands;
+
+    public Menus(Commands commands)
     {
         Commands = commands;
 
@@ -20,6 +21,42 @@ public class IksMenus
     private void OnManagePlayersMenuOpen(string key, IMenu menu, CCSPlayerController caller)
     {
         if (key != "ManagePlayers") return;
+        // SetHp
+        if (AdminApi.HasPermisions(caller.GetSteamId(), "set_hp", "b"))
+            menu.AddMenuOption(Localizer["MENUOPTION_Hp"], (_, _) => {
+                OpenSelectPlayerMenu(caller, (target, _) => {
+                    MenuManager.CloseActiveMenu(caller);
+                    AdminApi.SendMessageToPlayer(caller, Localizer["NOTIFY_PrintHp"]);
+                        AdminApi.NextCommandAction.Add(caller, msg => {
+                            Extensions.Hp(caller, target, int.Parse(msg));
+                        }
+                    );
+                }, onlyAlive: true, backmenu: menu);
+            });
+        // SetSpeed
+        if (AdminApi.HasPermisions(caller.GetSteamId(), "set_speed", "b"))
+            menu.AddMenuOption(Localizer["MENUOPTION_Speed"], (_, _) => {
+                OpenSelectPlayerMenu(caller, (target, _) => {
+                    MenuManager.CloseActiveMenu(caller);
+                    AdminApi.SendMessageToPlayer(caller, Localizer["NOTIFY_PrintSpeed"]);
+                    AdminApi.NextCommandAction.Add(caller, msg => {
+                            Extensions.SetSpeed(caller, target, int.Parse(msg));
+                        }
+                    );
+                }, onlyAlive: true, backmenu: menu);
+            });
+        // SetGravity
+        if (AdminApi.HasPermisions(caller.GetSteamId(), "set_gravity", "b"))
+            menu.AddMenuOption(Localizer["MENUOPTION_Speed"], (_, _) => {
+                OpenSelectPlayerMenu(caller, (target, _) => {
+                    MenuManager.CloseActiveMenu(caller);
+                    AdminApi.SendMessageToPlayer(caller, Localizer["NOTIFY_PrintSpeed"]);
+                    AdminApi.NextCommandAction.Add(caller, msg => {
+                            Extensions.SetSpeed(caller, target, int.Parse(msg));
+                        }
+                    );
+                }, onlyAlive: true, backmenu: menu);
+            });
         // SavePos
         if (AdminApi.HasPermisions(caller.GetSteamId(), "savepos", "d"))
             menu.AddMenuOption(Localizer["MENUOPTION_SavePos"], (_, _) => {
@@ -89,7 +126,6 @@ public class IksMenus
         }, onlyAlive: true, backmenu: backmenu);
     }
 
-
     private void OpenSelectPlayerMenu(CCSPlayerController caller, Action<CCSPlayerController, IMenu> onSelect, bool onlyAlive = false, bool withBots = false, IMenu? backmenu = null)
     {
         var menu = AdminApi.CreateMenu((_, _, menu) => {
@@ -99,13 +135,12 @@ public class IksMenus
                 if (onlyAlive && !player.PawnIsAlive)
                 {
                     players.Remove(player);
-                    return;
+                    continue;
                 }
                 if (!withBots && player.IsBot)
                 {
                     players.Remove(player);
                 }
-                    
             }
             foreach (var player in players)
             {
